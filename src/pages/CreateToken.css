@@ -1,0 +1,113 @@
+/* --- Root Container --- */
+.mint-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  color: white;
+  text-align: center;
+}
+
+/* --- Header & Branding --- */
+.mint-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 40px;
+}
+
+.mint-header h1 span {
+  color: #3b82f6; /* Cyan/Blue accent like image */
+}
+
+/* --- Main Selection Card --- */
+.selection-box {
+  background: rgba(30, 41, 59, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 40px 25px;
+}
+
+.selection-title {
+  color: #94a3b8;
+  margin-bottom: 30px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* --- Token Row Styling --- */
+.token-type-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.token-type-row {
+  display: flex;
+  align-items: center;
+  background: #1e293b; /* Dark card color */
+  padding: 20px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  border: 1px solid transparent;
+}
+
+.token-type-row:hover {
+  border-color: #3b82f6;
+  background: #1e2d4d;
+  transform: scale(1.01);
+}
+
+.token-icon-large {
+  font-size: 40px;
+  margin-right: 25px;
+  min-width: 60px;
+  display: flex;
+  justify-content: center;
+}
+
+.token-details {
+  flex-grow: 1;
+}
+
+.token-details h3 {
+  font-size: 1.2rem;
+  margin-bottom: 5px;
+  color: #ffffff;
+}
+
+.token-details p {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
+}
+
+/* --- Fee Styling --- */
+.fee-text {
+  color: #6366f1; /* Purple/Blue fee text from screenshot */
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.select-link {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* --- Footer Note --- */
+.mint-footer-note {
+  margin-top: 40px;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.mint-footer-note span {
+  font-size: 0.75rem;
+  display: block;
+}

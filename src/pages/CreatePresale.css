@@ -1,0 +1,90 @@
+.presale-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    min-height: 80vh;
+}
+
+.presale-card {
+    background: #1a1a1a;
+    border: 1px solid #d4af37; /* Gold Border */
+    border-radius: 15px;
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+}
+
+.stage-badge {
+    background: #d4af37;
+    color: black;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.price-box {
+    margin: 20px 0;
+    padding: 15px;
+    background: #252525;
+    border-radius: 10px;
+}
+
+.inr-text {
+    color: #888;
+    font-size: 0.9rem;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccc;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: #111;
+    border: 1px solid #444;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+.buy-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(45deg, #d4af37, #f9d976);
+    border: none;
+    border-radius: 8px;
+    color: black;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.buy-btn:hover {
+    transform: scale(1.02);
+}
+
+.status-msg {
+    margin-top: 15px;
+    color: #d4af37;
+    font-weight: 500;
+}
+
+.presale-info {
+    margin-top: 20px;
+    color: #666;
+    font-size: 0.8rem;
+}
