@@ -1,10 +1,11 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Empire Bridge Import
+// Components & Utilities
+import Footer from "./components/Footer";
 import { EMPIRE_CONFIG } from "./utils/EmpireBridge";
 
-// Pages Imports
+// Pages
 import Home from "./pages/Home";
 import CreateToken from "./pages/CreateToken";
 import StandardToken from "./pages/StandardToken";
@@ -18,60 +19,82 @@ import TermsOfUse from "./pages/TermsOfUse";
 import PrivatePolicy from "./pages/PrivatePolicy";
 import Documentation from "./pages/Documentation";
 
-// CSS Import
+// CSS
 import "./pages/CreatePresale.css";
 
-// Components
-import Footer from "./components/Footer";
-
 function App() {
-  const appStyle = {
-    backgroundColor: "#0a1120",
-    minHeight: "100vh",
-    width: "100%",
-    margin: 0,
-    padding: 0,
-    color: "white",
-    display: "flex",
-    flexDirection: "column",
-    fontFamily: "'Inter', sans-serif",
+  // ✅ Backend API Test Function
+  const createUser = async () => {
+    try {
+      const response = await fetch("https://ecobackend-two.vercel.app/api/users/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wallet: "0x123", username: "Ashu" }),
+      });
+      const data = await response.json();
+      console.log("Backend Response:", data);
+      alert("User Created Successfully ✅");
+    } catch (error) {
+      console.error("Backend Error:", error);
+      alert("Backend Connection Failed ❌");
+    }
   };
 
   return (
     <div style={appStyle}>
       <Router>
+        {/* Test Button */}
+        <button onClick={createUser} style={testButtonStyle}>
+          Test Backend
+        </button>
+
         <div className="app-container" style={{ flex: 1 }}>
           <Routes>
-
-            {/* Home */}
             <Route path="/" element={<Home />} />
-
-            {/* Token Pages */}
             <Route path="/create" element={<CreateToken />} />
             <Route path="/standard-token" element={<StandardToken />} />
             <Route path="/fee-token" element={<FeeToken />} />
             <Route path="/burn-token" element={<BurnToken />} />
-
-            {/* Lock & Airdrop */}
             <Route path="/create-lock" element={<CreateLock />} />
             <Route path="/airdrop" element={<Airdrop />} />
-
-            {/* Presale */}
             <Route path="/create-presale" element={<CreatePresale />} />
-
-            {/* Extra Pages */}
             <Route path="/marketing" element={<MarketingService />} />
             <Route path="/documentation" element={<Documentation />} />
             <Route path="/private-policy" element={<PrivatePolicy />} />
             <Route path="/terms-of-use" element={<TermsOfUse />} />
-
           </Routes>
         </div>
-
         <Footer />
       </Router>
     </div>
   );
 }
+
+// Styles separated for better readability
+const appStyle = {
+  backgroundColor: "#0a1120",
+  minHeight: "100vh",
+  width: "100%",
+  margin: 0,
+  padding: 0,
+  color: "white",
+  display: "flex",
+  flexDirection: "column",
+  fontFamily: "'Inter', sans-serif",
+};
+
+const testButtonStyle = {
+  position: "fixed",
+  top: "20px",
+  right: "20px",
+  zIndex: 9999,
+  padding: "12px 18px",
+  background: "#06b6d4",
+  color: "#000",
+  border: "none",
+  borderRadius: "12px",
+  cursor: "pointer",
+  fontWeight: "bold",
+};
 
 export default App;
