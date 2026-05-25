@@ -44,9 +44,7 @@ function App() {
     <div style={appStyle}>
       <Router>
         {/* Test Button */}
-        <button onClick={createUser} style={testButtonStyle}>
-          Test Backend
-        </button>
+        
 
         <div className="app-container" style={{ flex: 1 }}>
           <Routes>
