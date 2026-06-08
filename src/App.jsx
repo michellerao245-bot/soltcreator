@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Components & Utilities
 import Footer from "./components/Footer";
 import { EMPIRE_CONFIG } from "./utils/EmpireBridge";
-
 // Pages
 import Home from "./pages/Home";
 import CreateToken from "./pages/CreateToken";
@@ -43,9 +42,9 @@ function App() {
   return (
     <div style={appStyle}>
       <Router>
-        
-        
 
+
+    
         <div className="app-container" style={{ flex: 1 }}>
           <Routes>
             <Route path="/" element={<Home />} />

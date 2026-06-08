@@ -5,111 +5,83 @@ import FACTORY_ABI from '../contractABI.json';
 const FeeToken = () => {
   const [loading, setLoading] = useState(false);
   const [tokenAddress, setTokenAddress] = useState("");
-
+  const [deployMessage, setDeployMessage] = useState("");
+  const [copySuccess, setCopySuccess] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     symbol: '',
     supply: '',
-    decimals: '18',
-    tax: '2%'
+    decimals: 18,
+    tax: '' // Tax field added
   });
 
   const FACTORY_ADDRESS = "0xc8fBBfa8172D3FF165889259C3a02eC5a5Cc3a18";
   const SOLT_TOKEN_ADDRESS = "0x6C8942407c65D0f038b04DD5DA3420eC826Cc8d9";
+  const FEE_AMOUNT = "2000"; 
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(tokenAddress);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
 
   const handleDeploy = async (e) => {
     e.preventDefault();
-
-    if (!window.ethereum) {
-      return alert("Please install MetaMask !");
-    }
+    if (!window.ethereum) return alert("MetaMask not detected.");
 
     try {
       setLoading(true);
+      setDeployMessage("🚀 Preparing Fee Token deployment...");
+      setTokenAddress("");
 
-      await window.ethereum.request({
-        method: 'eth_requestAccounts'
-      });
-
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-
-      // Network check
-      const network = await provider.getNetwork();
-      if (network.chainId !== 56n) {
-        await window.ethereum.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0x38' }],
-        });
-      }
-
-      // ✅ APPROVE
-      const soltContract = new ethers.Contract(
+      
+      // 1. Approve Fee
+      setDeployMessage("⏳ Approving 2000 SOLT fee...");
+      const solt = new ethers.Contract(
         SOLT_TOKEN_ADDRESS,
-        [
-          "function approve(address spender, uint256 amount) public returns (bool)",
-          "function allowance(address owner, address spender) view returns (uint256)"
-        ],
+        ["function approve(address spender, uint256 amount) returns (bool)"],
         signer
       );
-
-      console.log("Approving 2000 SOLT...");
-      const approveTx = await soltContract.approve(
-        FACTORY_ADDRESS,
-        ethers.parseUnits("2000", 18)
-      );
+      
+      const approveTx = await solt.approve(FACTORY_ADDRESS, ethers.parseUnits(FEE_AMOUNT, 18));
       await approveTx.wait();
 
-      // ✅ DEPLOY
-      const factoryContract = new ethers.Contract(
-        FACTORY_ADDRESS,
-        FACTORY_ABI,
-        signer
-      );
+      // 2. Deploy Fee Token
+      setDeployMessage("⏳ Deploying Fee Token...");
+      const factory = new ethers.Contract(FACTORY_ADDRESS, FACTORY_ABI, signer);
 
-     const supplyWei = window.BigInt(formData.supply);
-
-      const tx = await factoryContract.createFeeToken(
+      const tx = await factory.createFeeToken(
         formData.name,
         formData.symbol,
-        supplyWei,
-        parseInt(formData.decimals),
-        parseInt(formData.tax) * 100 // ⚠️ IMPORTANT FIX
+        BigInt(formData.supply),
+        Number(formData.decimals),
+        BigInt(formData.tax) // Tax passed here
       );
-
-      console.log("TX HASH:", tx.hash);
 
       const receipt = await tx.wait();
 
-      // ✅ TOKEN ADDRESS EXTRACT
-      const event = receipt.logs.find(log => log.fragment?.name === "TokenCreated");
-
-      let deployedAddress = "";
-      if (event) {
-        deployedAddress = event.args.token;
-        setTokenAddress(deployedAddress);
+      // 3. Extract Address
+      let deployedAddress = null;
+      for (const log of receipt.logs) {
+        try {
+          const parsed = factory.interface.parseLog(log);
+          if (parsed && parsed.name === "TokenCreated") {
+            deployedAddress = parsed.args.token;
+            break;
+          }
+        } catch (e) { continue; }
       }
 
-      alert(`🎉 Token deployed!\nAddress: ${deployedAddress}`);
-
-      // RESET
-      setFormData({
-        name: '',
-        symbol: '',
-        supply: '',
-        decimals: '18',
-        tax: '2%'
-      });
+      setTokenAddress(deployedAddress);
+      setDeployMessage("✅ Fee Token Deployed Successfully!");
+      setFormData({ name: '', symbol: '', supply: '', decimals: 18, tax: '' });
 
     } catch (err) {
       console.error(err);
-
-      if (err.code === 4001) {
-        alert("Transaction cancel kar di.");
-      } else {
-        alert(err.reason || err.message);
-      }
-
+      setDeployMessage("❌ Error: " + (err.reason || err.message));
     } finally {
       setLoading(false);
     }
@@ -118,114 +90,53 @@ const FeeToken = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-
-        <h2 style={styles.title}>🚀 Deploy Fee Token</h2>
+        <h2 style={styles.title}>🛡️ Fee Token Deployer</h2>
 
         <form onSubmit={handleDeploy}>
-
-          <input
-            style={styles.input}
-            placeholder="Token Name"
-            value={formData.name}
-            onChange={e => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
-
-          <input
-            style={styles.input}
-            placeholder="Symbol"
-            value={formData.symbol}
-            onChange={e => setFormData({ ...formData, symbol: e.target.value })}
-            required
-          />
-
-          <input
-            style={styles.input}
-            type="number"
-            placeholder="Total Supply (e.g. 100000)"
-            value={formData.supply}
-            onChange={e => setFormData({ ...formData, supply: e.target.value })}
-            required
-          />
-
-          <input
-            style={styles.input}
-            type="number"
-            placeholder="Tax % (max 10)"
-            value={formData.tax}
-            onChange={e => setFormData({ ...formData, tax: e.target.value })}
-            required
-          />
+          <input style={styles.input} placeholder="Token Name" value={formData.name} onChange={e => setFormData({...formData, name: e.target.value})} required />
+          <input style={styles.input} placeholder="Token Symbol" value={formData.symbol} onChange={e => setFormData({...formData, symbol: e.target.value})} required />
+          <input style={styles.input} type="number" placeholder="Total Supply" value={formData.supply} onChange={e => setFormData({...formData, supply: e.target.value})} required />
+          <input style={styles.input} type="number" placeholder="Decimals (Default: 18)" value={formData.decimals} onChange={e => setFormData({...formData, decimals: e.target.value})} />
+          <input style={styles.input} type="number" placeholder="Tax (e.g., 500 for 5%)" value={formData.tax} onChange={e => setFormData({...formData, tax: e.target.value})} required />
 
           <button style={styles.button} disabled={loading}>
             {loading ? "⏳ Processing..." : "Deploy Fee Token"}
           </button>
-
         </form>
 
-        {/* ✅ SHOW TOKEN ADDRESS */}
-        {tokenAddress && (
-          <div style={styles.result}>
-            <p>✅ Token Successfully Deployed:</p>
-            <p style={{ wordBreak: "break-all", color: "#22c55e" }}>
-              {tokenAddress}
-            </p>
+        {deployMessage && (
+          <div style={deployMessage.includes("❌") ? styles.errorBox : styles.successBox}>
+            <p style={{ margin: 0 }}>{deployMessage}</p>
           </div>
         )}
 
+        {tokenAddress && (
+          <div style={styles.resultBox}>
+            <p style={{ fontSize: '12px', margin: '0 0 8px 0' }}>✅ Live Contract Address:</p>
+            <div style={styles.addressArea}>
+              <span style={{ fontSize: '12px' }}>{tokenAddress}</span>
+              <button onClick={copyToClipboard} style={styles.copyBtn}>
+                {copySuccess ? "Copied!" : "Copy"}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
-// 🎨 STYLES
 const styles = {
-  container: {
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #020617, #0f172a)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    color: "#fff"
-  },
-  card: {
-    background: "#0f172a",
-    padding: "30px",
-    borderRadius: "16px",
-    width: "380px",
-    boxShadow: "0 0 30px rgba(0,0,0,0.7)"
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: "20px"
-  },
-  input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "8px",
-    border: "1px solid #334155",
-    background: "#020617",
-    color: "#fff",
-    outline: "none"
-  },
-  button: {
-    width: "100%",
-    padding: "12px",
-    background: "linear-gradient(90deg, #3b82f6, #06b6d4)",
-    border: "none",
-    borderRadius: "8px",
-    color: "#fff",
-    fontWeight: "bold",
-    cursor: "pointer"
-  },
-  result: {
-    marginTop: "20px",
-    background: "#020617",
-    padding: "10px",
-    borderRadius: "8px",
-    border: "1px solid #334155"
-  }
+  container: { minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center", background: "#0a1120", color: "#fff", fontFamily: "'Inter', sans-serif" },
+  card: { background: "#162031", padding: "30px", borderRadius: "16px", width: "360px", border: "1px solid #1e293b", boxShadow: "0 10px 40px rgba(0,0,0,0.5)" },
+  title: { textAlign: "center", marginBottom: "25px", fontSize: '22px', fontWeight: 'bold', color: '#fbbf24' }, // Yellowish for Fee/Tax
+  input: { width: "100%", padding: "12px", marginBottom: "15px", borderRadius: "8px", border: "1px solid #334155", background: "#0a1120", color: "#fff", boxSizing: 'border-box' },
+  button: { width: "100%", padding: "14px", background: "linear-gradient(90deg, #d97706, #fbbf24)", border: "none", borderRadius: "8px", color: "#fff", fontWeight: "bold", cursor: "pointer" },
+  successBox: { marginTop: "15px", padding: "12px", borderRadius: "8px", background: "#064e3b", border: "1px solid #10b981", color: "#10b981", textAlign: "center", fontSize: "12px" },
+  errorBox: { marginTop: "15px", padding: "12px", borderRadius: "8px", background: "#7f1d1d", border: "1px solid #ef4444", color: "#ef4444", textAlign: "center", fontSize: "12px" },
+  resultBox: { marginTop: "20px", background: "#0a1120", padding: "15px", borderRadius: "8px", border: "1px dashed #fbbf24" },
+  addressArea: { display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "10px", gap: "10px" },
+  copyBtn: { padding: "5px 10px", fontSize: "10px", cursor: "pointer", background: "#334155", color: "#fff", border: "none", borderRadius: "4px" }
 };
 
 export default FeeToken;
