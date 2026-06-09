@@ -1,5 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Web3Provider } from "./context/Web3Provider"; // Provider Import
 
 // Components & Utilities
 import Footer from "./components/Footer";
@@ -41,28 +42,28 @@ function App() {
 
   return (
     <div style={appStyle}>
-      <Router>
-
-
-    
-        <div className="app-container" style={{ flex: 1 }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/create" element={<CreateToken />} />
-            <Route path="/standard-token" element={<StandardToken />} />
-            <Route path="/fee-token" element={<FeeToken />} />
-            <Route path="/burn-token" element={<BurnToken />} />
-            <Route path="/create-lock" element={<CreateLock />} />
-            <Route path="/airdrop" element={<Airdrop />} />
-            <Route path="/create-presale" element={<CreatePresale />} />
-            <Route path="/marketing" element={<MarketingService />} />
-            <Route path="/documentation" element={<Documentation />} />
-            <Route path="/private-policy" element={<PrivatePolicy />} />
-            <Route path="/terms-of-use" element={<TermsOfUse />} />
-          </Routes>
-        </div>
-        <Footer />
-      </Router>
+      {/* WRAPPING THE ENTIRE APP WITH WEB3 PROVIDER */}
+      <Web3Provider>
+        <Router>
+          <div className="app-container" style={{ flex: 1 }}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/create" element={<CreateToken />} />
+              <Route path="/standard-token" element={<StandardToken />} />
+              <Route path="/fee-token" element={<FeeToken />} />
+              <Route path="/burn-token" element={<BurnToken />} />
+              <Route path="/create-lock" element={<CreateLock />} />
+              <Route path="/airdrop" element={<Airdrop />} />
+              <Route path="/create-presale" element={<CreatePresale />} />
+              <Route path="/marketing" element={<MarketingService />} />
+              <Route path="/documentation" element={<Documentation />} />
+              <Route path="/private-policy" element={<PrivatePolicy />} />
+              <Route path="/terms-of-use" element={<TermsOfUse />} />
+            </Routes>
+          </div>
+          <Footer />
+        </Router>
+      </Web3Provider>
     </div>
   );
 }
