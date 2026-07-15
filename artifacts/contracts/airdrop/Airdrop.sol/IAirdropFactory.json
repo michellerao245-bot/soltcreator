@@ -1,0 +1,37 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "IAirdropFactory",
+  "sourceName": "contracts/airdrop/Airdrop.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "airdropId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "recipients",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalDistributed",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateAirdropStatus",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/airdrop/Airdrop.sol",
+  "buildInfoId": "solc-0_8_28-82d34915115d785dd540688689cb3ced0f855fb9"
+}

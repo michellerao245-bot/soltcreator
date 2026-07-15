@@ -1,0 +1,38 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "IUniswapV2Factory",
+  "sourceName": "contracts/SoltEcosystem/SoltMain.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "tokenA",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "tokenB",
+          "type": "address"
+        }
+      ],
+      "name": "createPair",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "pair",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/SoltEcosystem/SoltMain.sol",
+  "buildInfoId": "solc-0_8_28-86aebc0b3f73049289a3f95c407823f1fa776cda"
+}

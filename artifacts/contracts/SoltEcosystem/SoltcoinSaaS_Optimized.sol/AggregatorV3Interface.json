@@ -1,0 +1,47 @@
+{
+  "_format": "hh3-artifact-1",
+  "contractName": "AggregatorV3Interface",
+  "sourceName": "contracts/SoltEcosystem/SoltcoinSaaS_Optimized.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "latestRoundData",
+      "outputs": [
+        {
+          "internalType": "uint80",
+          "name": "roundId",
+          "type": "uint80"
+        },
+        {
+          "internalType": "int256",
+          "name": "price",
+          "type": "int256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "startedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "updatedAt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint80",
+          "name": "answeredInRound",
+          "type": "uint80"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {},
+  "immutableReferences": {},
+  "inputSourceName": "project/contracts/SoltEcosystem/SoltcoinSaaS_Optimized.sol",
+  "buildInfoId": "solc-0_8_28-86aebc0b3f73049289a3f95c407823f1fa776cda"
+}
