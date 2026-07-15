@@ -1,11 +1,14 @@
-import { defineConfig } from "vite"
-import react from "@vitejs/plugin-react"
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  // ... baki settings
+  plugins: [react()],
+  optimizeDeps: {
+    include: ['react-is'], // Yeh Vite ko batata hai ki ise pre-bundle karo
+  },
   build: {
     rollupOptions: {
-      external: ['react-is']
-    }
-  }
-})
+      external: [], // Agar pehle kuch add kiya tha, toh ise khali kar do
+    },
+  },
+});
